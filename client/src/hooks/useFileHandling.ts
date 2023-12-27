@@ -13,7 +13,19 @@ const maxSize = 25;
 const fileLimit = 10;
 const sizeLimit = sizeMB * 1024 * 1024; // 20 MB
 const totalSizeLimit = maxSize * 1024 * 1024; // 25 MB
-const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+// UCLA BEGIN EDIT
+// Add excel files to supportedTypes
+// const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const supportedTypes = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+// UCLA END EDIT
 
 const useFileHandling = () => {
   const { showToast } = useToastContext();
@@ -163,7 +175,11 @@ const useFileHandling = () => {
     for (let i = 0; i < fileList.length; i++) {
       const originalFile = fileList[i];
       if (!supportedTypes.includes(originalFile.type)) {
-        setError('Currently, only JPEG, JPG, PNG, and WEBP files are supported.');
+        // UCLA BEGIN EDIT
+        // Change error message to include excel files too
+        // setError('Currently, only JPEG, JPG, PNG, and WEBP files are supported.');
+        setError('Currently, only JPEG, JPG, PNG, WEBP, and excel files are supported.');
+        // UCLA END EDIT
         return false;
       }
 

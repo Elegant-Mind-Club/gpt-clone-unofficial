@@ -1,3 +1,11 @@
+# Purpose
+
+This is the UCLA Physics 5 series GPT repository. Our goal is to provide students free access to GPT4 by utilizing OpenAI API keys. 
+
+# Credit
+
+This repository leverages the open source github repository LibreChat. The official README for LibreChat is shown below. 
+
 <p align="center">
   <a href="https://docs.librechat.ai">
     <img src="docs/assets/LibreChat.svg" height="256">

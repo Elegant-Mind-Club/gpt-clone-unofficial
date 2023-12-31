@@ -7,6 +7,10 @@ import { useChatContext } from '~/Providers/ChatContext';
 import { useUploadImageMutation } from '~/data-provider';
 import useSetFilesToDelete from './useSetFilesToDelete';
 import { NotificationSeverity } from '~/common';
+// UCLA EDIT BEGIN
+// Excel icon for the frontend display of excel files
+import excelIcon from '../../public/assets/excel-icon.png';
+// UCLA EDIT END
 
 const sizeMB = 20;
 const maxSize = 25;
@@ -22,6 +26,11 @@ const supportedTypes = [
   'image/jpg',
   'image/png',
   'image/webp',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+// Add a list of supported excel types for checking types later
+const supportedExcelTypes = [
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ];
@@ -158,7 +167,6 @@ const useFileHandling = () => {
     if (extendedFile.height) {
       formData.append('height', extendedFile.height?.toString());
     }
-
     uploadImage.mutate({ formData, file_id: extendedFile.file_id });
   };
 
@@ -228,7 +236,12 @@ const useFileHandling = () => {
     }
 
     /* Process files */
-    fileList.forEach((originalFile) => {
+
+    // UCLA BEGIN EDIT
+    // Change the for each function to async so that the excel await function works
+    // fileList.forEach((originalFile) => {
+    for (const originalFile of fileList) {
+      // UCLA END EDIT
       const file_id = v4();
       try {
         const preview = URL.createObjectURL(originalFile);
@@ -241,6 +254,26 @@ const useFileHandling = () => {
         };
 
         addFile(extendedFile);
+
+        // UCLA BEGIN EDIT
+
+        // Add a check for excel files. If the file is an excel file, then upload it and skip the rest of the code
+
+        if (supportedExcelTypes.includes(originalFile.type)) {
+          // Handle Excel files
+          extendedFile = {
+            ...extendedFile,
+            preview: excelIcon, // Set preview to Excel icon
+            progress: 0.6,
+          };
+          replaceFile(extendedFile);
+
+          await uploadFile(extendedFile);
+          URL.revokeObjectURL(preview);
+          continue;
+        }
+
+        // UCLA END EDIT
 
         // async processing
         const img = new Image();
@@ -262,7 +295,7 @@ const useFileHandling = () => {
         console.log('file handling error', error);
         setError('An error occurred while processing the file.');
       }
-    });
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

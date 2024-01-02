@@ -24,5 +24,6 @@ router.use('/images', images);
 // UCLA BEGIN EDIT
 router.use('/excel', excel);
 // UCLA END EDIT
+router.use('/images/avatar', require('./avatar'));
 
 module.exports = router;

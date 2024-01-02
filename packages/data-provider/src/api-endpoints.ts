@@ -74,3 +74,4 @@ export const images = () => `${files()}/images`;
 // Add excel endpoint
 export const excel = () => `${files()}/excel`;
 // UCLA END EDIT
+export const avatar = () => `${images()}/avatar`;

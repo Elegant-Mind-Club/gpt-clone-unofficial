@@ -12,6 +12,8 @@ import type {
   PresetDeleteResponse,
   LogoutOptions,
   TPreset,
+  UploadAvatarOptions,
+  AvatarUploadResponse,
 } from 'librechat-data-provider';
 
 import { dataService, MutationKeys } from 'librechat-data-provider';
@@ -114,5 +116,20 @@ export const useLogoutUserMutation = (
       localStorage.removeItem('lastAssistant');
       options?.onMutate?.(...args);
     },
+  });
+};
+
+/* Avatar upload */
+export const useUploadAvatarMutation = (
+  options?: UploadAvatarOptions,
+): UseMutationResult<
+  AvatarUploadResponse, // response data
+  unknown, // error
+  FormData, // request
+  unknown // context
+> => {
+  return useMutation([MutationKeys.avatarUpload], {
+    mutationFn: (variables: FormData) => dataService.uploadAvatar(variables),
+    ...(options || {}),
   });
 };

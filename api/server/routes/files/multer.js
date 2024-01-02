@@ -3,7 +3,18 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 
-const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+// UCLA BEGIN EDIT
+// Add excel files to supportedTypes
+// const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const supportedTypes = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+// UCLA END EDIT
 const sizeLimit = 20 * 1024 * 1024; // 20 MB
 
 const storage = multer.diskStorage({
@@ -24,7 +35,11 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   if (!supportedTypes.includes(file.mimetype)) {
     return cb(
-      new Error('Unsupported file type. Only JPEG, JPG, PNG, and WEBP files are allowed.'),
+      // UCLA BEGIN EDIT
+      // Change error message to include excel files
+      // new Error('Unsupported file type. Only JPEG, JPG, PNG, and WEBP files are allowed.'),
+      new Error('Unsupported file type. Only JPEG, JPG, PNG, WEBP, and excel files are allowed.'),
+      // UCLA END EDIT
       false,
     );
   }

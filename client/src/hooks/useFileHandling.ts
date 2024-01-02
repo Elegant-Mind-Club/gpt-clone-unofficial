@@ -5,6 +5,7 @@ import type { ExtendedFile } from '~/common';
 import { useToastContext } from '~/Providers/ToastContext';
 import { useChatContext } from '~/Providers/ChatContext';
 import { useUploadImageMutation } from '~/data-provider';
+import { useUploadExcelMutation } from '~/data-provider';
 import useSetFilesToDelete from './useSetFilesToDelete';
 import { NotificationSeverity } from '~/common';
 // UCLA EDIT BEGIN
@@ -157,6 +158,35 @@ const useFileHandling = () => {
     },
   });
 
+  // UCLA BEGIN EDIT
+  // Add ability to upload excel files
+  const uploadExcel = useUploadExcelMutation({
+    onSuccess: (data) => {
+      console.log('upload success', data);
+      updateFileById(data.temp_file_id, {
+        progress: 0.9,
+        filepath: data.filepath,
+      });
+
+      setTimeout(() => {
+        updateFileById(data.temp_file_id, {
+          progress: 1,
+          file_id: data.file_id,
+          temp_file_id: data.temp_file_id,
+          filepath: data.filepath,
+          type: data.type,
+          filename: data.filename,
+        });
+      }, 300);
+    },
+    onError: (error, body) => {
+      console.log('upload error', error);
+      deleteFileById(body.file_id);
+      setError('An error occurred while uploading the file.');
+    },
+  });
+  // UCLA END EDIT
+
   const uploadFile = async (extendedFile: ExtendedFile) => {
     const formData = new FormData();
     formData.append('file', extendedFile.file);
@@ -167,7 +197,19 @@ const useFileHandling = () => {
     if (extendedFile.height) {
       formData.append('height', extendedFile.height?.toString());
     }
-    uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+    // UCLA BEGIN EDIT
+    // Change the if statement to check if the file is an excel file
+
+    // uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+
+    if (supportedExcelTypes.includes(extendedFile.file.type)) {
+      // If the file is an excel file, then upload it as an excel file
+      uploadExcel.mutate({ formData, file_id: extendedFile.file_id });
+    } else {
+      // If the file is not an excel file, then upload it as an image
+      uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+    }
+    // UCLA END EDIT
   };
 
   const validateFiles = (fileList: File[]) => {

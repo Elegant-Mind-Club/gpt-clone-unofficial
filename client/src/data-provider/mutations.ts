@@ -32,6 +32,23 @@ export const useUploadImageMutation = (
   });
 };
 
+// UCLA BEGIN EDIT
+// Add ability to upload excel files too
+export const useUploadExcelMutation = (
+  options?: UploadMutationOptions,
+): UseMutationResult<
+  FileUploadResponse, // response data
+  unknown, // error
+  FileUploadBody, // request
+  unknown // context
+> => {
+  return useMutation([MutationKeys.excelUpload], {
+    mutationFn: (body: FileUploadBody) => dataService.uploadExcel(body.formData),
+    ...(options || {}),
+  });
+};
+// UCLA END EDIT
+
 export const useDeleteFilesMutation = (
   options?: DeleteMutationOptions,
 ): UseMutationResult<

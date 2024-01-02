@@ -20,6 +20,10 @@ export enum QueryKeys {
 
 export enum MutationKeys {
   imageUpload = 'imageUpload',
+  // UCLA BEGIN EDIT
+  // Add excel upload mutation key
+  excelUpload = 'imageUpload',
+  // UCLA END EDIT
   fileDelete = 'fileDelete',
   updatePreset = 'updatePreset',
   deletePreset = 'deletePreset',

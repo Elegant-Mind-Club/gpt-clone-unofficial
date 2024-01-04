@@ -4,6 +4,13 @@ const { saveMessage, getConvoTitle, getConvo } = require('~/models');
 const { createAbortController, handleAbortError } = require('~/server/middleware');
 const { logger } = require('~/config');
 
+// UCLA BEGIN EDIT
+// get package for excel conversion
+const XLSX = require('xlsx');
+// get path for excel file
+const path = require('path');
+// UCLA END EDIT
+
 const AskController = async (req, res, next, initializeClient, addTitle) => {
   let {
     text,
@@ -12,6 +19,39 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
     parentMessageId = null,
     overrideParentMessageId = null,
   } = req.body;
+
+  // UCLA BEGIN EDIT
+  // Convert excel file to text
+
+  // Convert Excel files to text and append to a text variable
+  let additionalText = '';
+  if (req.body.files) {
+    req.body.files.forEach((file) => {
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        // Resolve the absolute path
+        const absoluteFilePath = path.join(
+          __dirname,
+          '../../..',
+          'client',
+          'public',
+          file.filepath,
+        );
+        const workbook = XLSX.readFile(absoluteFilePath);
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const text = XLSX.utils.sheet_to_csv(sheet, { header: 1 });
+          additionalText += text;
+        });
+      }
+    });
+  }
+
+  // Combine the original text with the extracted text from Excel files
+  const combinedText = text + '\n' + additionalText;
+  req.body.text = combinedText;
+  text = req.body.text;
+
+  // UCLA END EDIT
 
   logger.debug('[AskController]', { text, conversationId, ...endpointOption });
 

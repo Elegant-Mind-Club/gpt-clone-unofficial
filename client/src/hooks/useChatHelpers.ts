@@ -160,7 +160,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
     const responseSender = getResponseSender({ model: conversation?.model, ...endpointOption });
 
     let currentMessages: TMessage[] | null = getMessages() ?? [];
-
     // construct the query message
     // this is not a real messageId, it is used as placeholder before real messageId returned
     text = text.trim();
@@ -202,7 +201,6 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       setFiles(new Map());
       setFilesToDelete({});
     }
-
     // construct the placeholder response message
     const generation = editedText ?? latestMessage?.text ?? '';
     const responseText = isEditOrContinue
@@ -244,12 +242,12 @@ export default function useChatHelpers(index = 0, paramId: string | undefined) {
       isRegenerate,
       initialResponse,
     };
-
     if (isRegenerate) {
       setMessages([...submission.messages, initialResponse]);
     } else {
       setMessages([...submission.messages, currentMsg, initialResponse]);
     }
+
     setLatestMessage(initialResponse);
     setSubmission(submission);
   };

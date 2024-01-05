@@ -21,7 +21,6 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
   } = req.body;
 
   // UCLA BEGIN EDIT
-  // Convert excel file to text
 
   // Convert Excel files to text and append to a text variable
   let additionalText = '';
@@ -36,6 +35,7 @@ const AskController = async (req, res, next, initializeClient, addTitle) => {
           'public',
           file.filepath,
         );
+        console.log(absoluteFilePath);
         const workbook = XLSX.readFile(absoluteFilePath);
         workbook.SheetNames.forEach((sheetName) => {
           const sheet = workbook.Sheets[sheetName];

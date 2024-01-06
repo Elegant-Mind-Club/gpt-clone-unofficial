@@ -1,0 +1,19 @@
+{
+  "api": { "type": "openapi", "url": "https://api.chatwithyourdata.io/openapi.yaml" },
+  "auth": {
+    "authorization_content_type": "application/json",
+    "authorization_url": "https://chatwithyourdata.us.auth0.com/oauth/token",
+    "client_url": "https://chatwithyourdata.us.auth0.com/authorize",
+    "scope": "openid profile email offline_access",
+    "type": "oauth",
+    "verification_tokens": { "openai": "fe2b7236137c4984b021ff1264411dc8" }
+  },
+  "contact_email": "team@julius.ai",
+  "description_for_human": "Conversational analysis over your databases and spreadsheets.",
+  "description_for_model": "Perform analysis on databases and spreadsheets.",
+  "legal_info_url": "https://chatwithyourdata.io/tos.html",
+  "logo_url": "https://api.chatwithyourdata.io/logo.png",
+  "name_for_human": "Chat With Your Data",
+  "name_for_model": "chat_with_data",
+  "schema_version": "v1"
+}

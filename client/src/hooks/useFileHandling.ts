@@ -5,15 +5,37 @@ import type { ExtendedFile } from '~/common';
 import { useToastContext } from '~/Providers/ToastContext';
 import { useChatContext } from '~/Providers/ChatContext';
 import { useUploadImageMutation } from '~/data-provider';
+import { useUploadExcelMutation } from '~/data-provider';
 import useSetFilesToDelete from './useSetFilesToDelete';
 import { NotificationSeverity } from '~/common';
+// UCLA EDIT BEGIN
+// Excel icon for the frontend display of excel files
+import excelIcon from '../../public/assets/excel-icon.png';
+// UCLA EDIT END
 
 const sizeMB = 20;
 const maxSize = 25;
 const fileLimit = 10;
 const sizeLimit = sizeMB * 1024 * 1024; // 20 MB
 const totalSizeLimit = maxSize * 1024 * 1024; // 25 MB
-const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+// UCLA BEGIN EDIT
+// Add excel files to supportedTypes
+// const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const supportedTypes = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+// Add a list of supported excel types for checking types later
+const supportedExcelTypes = [
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+// UCLA END EDIT
 
 const useFileHandling = () => {
   const { showToast } = useToastContext();
@@ -136,6 +158,35 @@ const useFileHandling = () => {
     },
   });
 
+  // UCLA BEGIN EDIT
+  // Add ability to upload excel files
+  const uploadExcel = useUploadExcelMutation({
+    onSuccess: (data) => {
+      console.log('upload success', data);
+      updateFileById(data.temp_file_id, {
+        progress: 0.9,
+        filepath: data.filepath,
+      });
+
+      setTimeout(() => {
+        updateFileById(data.temp_file_id, {
+          progress: 1,
+          file_id: data.file_id,
+          temp_file_id: data.temp_file_id,
+          filepath: data.filepath,
+          type: data.type,
+          filename: data.filename,
+        });
+      }, 300);
+    },
+    onError: (error, body) => {
+      console.log('upload error', error);
+      deleteFileById(body.file_id);
+      setError('An error occurred while uploading the file.');
+    },
+  });
+  // UCLA END EDIT
+
   const uploadFile = async (extendedFile: ExtendedFile) => {
     const formData = new FormData();
     formData.append('file', extendedFile.file);
@@ -146,8 +197,19 @@ const useFileHandling = () => {
     if (extendedFile.height) {
       formData.append('height', extendedFile.height?.toString());
     }
+    // UCLA BEGIN EDIT
+    // Change the if statement to check if the file is an excel file
 
-    uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+    // uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+
+    if (supportedExcelTypes.includes(extendedFile.file.type)) {
+      // If the file is an excel file, then upload it as an excel file
+      uploadExcel.mutate({ formData, file_id: extendedFile.file_id });
+    } else {
+      // If the file is not an excel file, then upload it as an image
+      uploadImage.mutate({ formData, file_id: extendedFile.file_id });
+    }
+    // UCLA END EDIT
   };
 
   const validateFiles = (fileList: File[]) => {
@@ -163,7 +225,11 @@ const useFileHandling = () => {
     for (let i = 0; i < fileList.length; i++) {
       const originalFile = fileList[i];
       if (!supportedTypes.includes(originalFile.type)) {
-        setError('Currently, only JPEG, JPG, PNG, and WEBP files are supported.');
+        // UCLA BEGIN EDIT
+        // Change error message to include excel files too
+        // setError('Currently, only JPEG, JPG, PNG, and WEBP files are supported.');
+        setError('Currently, only JPEG, JPG, PNG, WEBP, and excel files are supported.');
+        // UCLA END EDIT
         return false;
       }
 
@@ -212,7 +278,12 @@ const useFileHandling = () => {
     }
 
     /* Process files */
-    fileList.forEach((originalFile) => {
+
+    // UCLA BEGIN EDIT
+    // Change the for each function to async so that the excel await function works
+    // fileList.forEach((originalFile) => {
+    for (const originalFile of fileList) {
+      // UCLA END EDIT
       const file_id = v4();
       try {
         const preview = URL.createObjectURL(originalFile);
@@ -225,6 +296,26 @@ const useFileHandling = () => {
         };
 
         addFile(extendedFile);
+
+        // UCLA BEGIN EDIT
+
+        // Add a check for excel files. If the file is an excel file, then upload it and skip the rest of the code
+
+        if (supportedExcelTypes.includes(originalFile.type)) {
+          // Handle Excel files
+          extendedFile = {
+            ...extendedFile,
+            preview: excelIcon, // Set preview to Excel icon
+            progress: 0.6,
+          };
+          replaceFile(extendedFile);
+
+          await uploadFile(extendedFile);
+          URL.revokeObjectURL(preview);
+          continue;
+        }
+
+        // UCLA END EDIT
 
         // async processing
         const img = new Image();
@@ -246,7 +337,7 @@ const useFileHandling = () => {
         console.log('file handling error', error);
         setError('An error occurred while processing the file.');
       }
-    });
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

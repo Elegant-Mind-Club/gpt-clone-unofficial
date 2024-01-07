@@ -1,5 +1,6 @@
 ---
 title: 🪙 Token Usage
+description: This doc covers how to track and control your token usage for the OpenAI/Plugins endpoints in LibreChat. You will learn how to view your transactions, enable user balances, and add credits to your account.
 weight: -7
 ---
 # Token Usage
@@ -28,6 +29,14 @@ npm run add-balance danny@librechat.ai 1000
 ```
 
 This works well to track your own usage for personal use; 1000 credits = $0.001 (1 mill USD)
+
+## Listing of balances
+
+To see the balances of your users, you can run:
+
+```bash
+npm run list-balances
+```
 
 ## Notes
 

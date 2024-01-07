@@ -12,6 +12,8 @@ import type {
   PresetDeleteResponse,
   LogoutOptions,
   TPreset,
+  UploadAvatarOptions,
+  AvatarUploadResponse,
 } from 'librechat-data-provider';
 
 import { dataService, MutationKeys } from 'librechat-data-provider';
@@ -31,6 +33,23 @@ export const useUploadImageMutation = (
     ...(options || {}),
   });
 };
+
+// UCLA BEGIN EDIT
+// Add ability to upload excel files too
+export const useUploadExcelMutation = (
+  options?: UploadMutationOptions,
+): UseMutationResult<
+  FileUploadResponse, // response data
+  unknown, // error
+  FileUploadBody, // request
+  unknown // context
+> => {
+  return useMutation([MutationKeys.excelUpload], {
+    mutationFn: (body: FileUploadBody) => dataService.uploadExcel(body.formData),
+    ...(options || {}),
+  });
+};
+// UCLA END EDIT
 
 export const useDeleteFilesMutation = (
   options?: DeleteMutationOptions,
@@ -97,5 +116,20 @@ export const useLogoutUserMutation = (
       localStorage.removeItem('lastAssistant');
       options?.onMutate?.(...args);
     },
+  });
+};
+
+/* Avatar upload */
+export const useUploadAvatarMutation = (
+  options?: UploadAvatarOptions,
+): UseMutationResult<
+  AvatarUploadResponse, // response data
+  unknown, // error
+  FormData, // request
+  unknown // context
+> => {
+  return useMutation([MutationKeys.avatarUpload], {
+    mutationFn: (variables: FormData) => dataService.uploadAvatar(variables),
+    ...(options || {}),
   });
 };

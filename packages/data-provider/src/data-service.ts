@@ -197,6 +197,16 @@ export const uploadImage = (data: FormData): Promise<f.FileUploadResponse> => {
   return request.postMultiPart(endpoints.images(), data);
 };
 
+// UCLA BEGIN EDIT
+// Add ability to upload excel files too
+export const uploadExcel = (data: FormData): Promise<f.FileUploadResponse> => {
+  return request.postMultiPart(endpoints.excel(), data);
+};
+// UCLA END EDIT
+export const uploadAvatar = (data: FormData): Promise<f.AvatarUploadResponse> => {
+  return request.postMultiPart(endpoints.avatar(), data);
+};
+
 export const deleteFiles = async (files: f.BatchFile[]): Promise<f.DeleteFilesResponse> =>
   request.deleteWithOptions(endpoints.files(), {
     data: { files },

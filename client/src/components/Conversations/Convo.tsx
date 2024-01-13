@@ -142,7 +142,7 @@ export default function Conversation({ conversation, retainView, toggleNav, i })
           />
         </div>
       ) : (
-        <div className="absolute inset-y-0 right-0 z-10 w-8 rounded-r-md bg-gradient-to-l from-black group-hover:from-gray-900" />
+        <div className="absolute inset-y-0 right-0 z-10 w-8 rounded-r-md bg-gradient-to-l from-[#003C5E] group-hover:from-black" />
       )}
     </a>
   );

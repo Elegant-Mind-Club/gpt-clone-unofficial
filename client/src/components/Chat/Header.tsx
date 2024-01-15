@@ -12,6 +12,7 @@ export default function Header() {
         <EndpointsMenu />
         <HeaderOptions />
         <PresetsMenu />
+        <ThemeOptions/>
       </div>
       {/* Empty div for spacing */}
       <div />

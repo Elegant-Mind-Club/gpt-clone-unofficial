@@ -2,6 +2,7 @@ import { useOutletContext } from 'react-router-dom';
 import type { ContextType } from '~/common';
 import { EndpointsMenu, PresetsMenu, NewChat } from './Menus';
 import HeaderOptions from './Input/HeaderOptions';
+import ThemeOptions from './Input/ThemeOptions';
 
 export default function Header() {
   const { navVisible } = useOutletContext<ContextType>();
@@ -12,6 +13,7 @@ export default function Header() {
         <EndpointsMenu />
         <HeaderOptions />
         <PresetsMenu />
+        <ThemeOptions/>
       </div>
       {/* Empty div for spacing */}
       <div />

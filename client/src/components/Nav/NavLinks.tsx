@@ -59,7 +59,7 @@ function NavLinks() {
             )}
             <Menu.Button
               className={cn(
-                'group-ui-open:bg-[#202123] duration-350 mt-text-sm mb-1 flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-[#202123]',
+                'group-ui-open:bg-[#202123] duration-350 mt-text-sm mb-1 flex w-full items-center gap-2.5 rounded-lg bg-[#FFB400]/95 px-2 py-1.5 transition-colors hover:bg-[#202123]',
                 open ? 'bg-[#202123]' : '',
               )}
               data-testid="nav-user"
@@ -79,7 +79,7 @@ function NavLinks() {
                 </div>
               </div>
               <div
-                className="mt-2 grow overflow-hidden text-ellipsis whitespace-nowrap text-left font-bold text-white"
+                className="mt-2 grow overflow-hidden text-ellipsis whitespace-nowrap text-left font-bold text-black hover:text-white"
                 style={{ marginTop: '-4px', marginLeft: '2px' }}
               >
                 {user?.name || localize('com_nav_user')}

@@ -79,7 +79,7 @@ function NavLinks() {
                 </div>
               </div>
               <div
-                className="mt-2 grow overflow-hidden text-ellipsis whitespace-nowrap text-left font-bold text-black hover:text-white"
+                className="mt-2 grow overflow-hidden text-ellipsis whitespace-nowrap text-left font-bold text-white"
                 style={{ marginTop: '-4px', marginLeft: '2px' }}
               >
                 {user?.name || localize('com_nav_user')}

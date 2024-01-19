@@ -50,7 +50,7 @@ const Icon: React.FC<IconProps> = (props) => {
         icon: <GPTIcon size={size * 0.5555555555555556} />,
         bg:
           typeof model === 'string' && model.toLowerCase().includes('gpt-4')
-            ? '#AB68FF'
+            ? '$FFFFFF' //found the purple color
             : '#19C37D',
         name: 'ChatGPT',
       },
